@@ -21,19 +21,15 @@ public class ArchivoDirectorios {
         for (String nombreDirectorio : Directorios){
 
             File directorio = new File(nombreDirectorio);
-
             //Si el directorio no existe...
             if(!directorio.exists()){
 
                 //Comando para intentar crear la carpeta (en caso de que no exista)
                 if(directorio.mkdir()){
-
                     System.out.println("Directorio "+nombreDirectorio+" creado");
-
                 }else{
                     //La carpeta ya existe
                     System.out.println("No se pudo crear el directorio "+nombreDirectorio);
-
                 }
             }
         }

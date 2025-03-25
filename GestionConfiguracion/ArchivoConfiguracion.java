@@ -24,9 +24,9 @@ public class ArchivoConfiguracion {
     public static void crearArchivoConfig() throws IOException {
         File archivo2 = new File(nombreArchivo);
         if (archivo2.createNewFile()) {
-            System.out.println("Archivo de configuracion creado");
+            System.out.println("\nArchivo de configuracion creado");
         } else {
-            System.out.println("No se ha podido crear el archivo de configuracion");
+            System.out.println("\nNo se ha podido crear el archivo de configuracion");
         }
     }
 }
