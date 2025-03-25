@@ -2,14 +2,19 @@ package GestionDirectorios;
 
 import java.io.File;
 
-//Clase ArchivoDirectorios
+/**
+ * Clase que se encarga de la creación de los directorios
+ */
 public class ArchivoDirectorios {
 
-    //Creamos un array de Strings estatico con los nombres de nuestros directorios
+   /**
+    *  Un Array de Strings que contiene los nombres de los directorios que Miguel ha mandado crear
+    */
     private static final String[] Directorios = {"jugadores", "escenarios", "partidas" };
 
-    /* 
-     * Creamos la funcion que recorre nuestro array de Strings(Directorios) y los va creando
+   /**
+    * Método que crea los directorios donde si no existen los crea
+    * @throws IOException lanza una excepción si no se puede crear el archivo    
     */
     public static void crearDirectorios(){
 
