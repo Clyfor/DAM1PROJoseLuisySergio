@@ -1,4 +1,3 @@
-import java.io.IOException;
 import GestionConfiguracion.ArchivoConfiguracion;
 import GestionDirectorios.ArchivoDirectorios;
 
@@ -6,22 +5,29 @@ import GestionDirectorios.ArchivoDirectorios;
  * Clase principal de la aplicación.
  * 
  * @author Jose Luis Moreno Torés y Sergio Ramírez Pla
- * @version GPL v_3
- * @date 2023-10-01
+ * @version GPL v_3
+ * @date 01/04/2025
  * @description Esta clase se encarga de crear el archivo de configuración y los directorios necesarios para la aplicación.
  */
-public class App {
-    public static void main(String[] args) throws IOException {
+
+ public class App {
+    public static void main(String[] args) {
         try {
-            if(!ArchivoConfiguracion.configuracionExiste()){
-                ArchivoConfiguracion.crearArchivoConfig();
+            // Verifica si el archivo de configuración existe
+            if (!ArchivoConfiguracion.configuracionExiste()) {
+                ArchivoConfiguracion.crearArchivoConfig();  // Si no existe, lo crea
             } else {
                 System.out.println("El archivo de configuración ya existe!");
             }
+
+            // Crea los directorios necesarios para el funcionamiento de la aplicación
             ArchivoDirectorios.crearDirectorios();
-        } catch (IOException e) {
-            System.out.println("Error al crear el archivo de configuración " +
-                    "\nMensaje de la excepción: " + e.getMessage());
+
+            // Llama al controlador para ejecutar la lógica del juego
+            Controlador.ejecutar();
+
+        } catch (Exception e) {
+            System.out.println("Error al iniciar la aplicación: " + e.getMessage());
         }
     }
 }
