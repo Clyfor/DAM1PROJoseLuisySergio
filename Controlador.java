@@ -11,18 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-
 /**
  * Clase encargada de gestionar la lógica del juego.
  * 
  * @author Jose Luis Moreno Torés y Sergio Ramírez Pla
  * @version GPL v_3
  * @date 01/04/2025
- * @description Gestiona la carga de usuarios, escenarios y la interacción con el jugador.
+ * @description Gestiona la carga de usuarios, escenarios y la interacción con
+ *              el jugador.
  */
 public class Controlador {
     private static final String ARCHIVO_USUARIOS = "usuarios.dat";
-    private static final String CARPETA_ESCENARIOS = "escenarios/";  // Ruta donde están los escenarios
+    private static final String CARPETA_ESCENARIOS = "escenarios/"; // Ruta donde están los escenarios
 
     /**
      * Método que inicia el flujo de la aplicación.
@@ -30,8 +30,8 @@ public class Controlador {
     public static void ejecutar() {
         Scanner teclado = new Scanner(System.in);
         Map<String, String> usuarios = cargarUsuarios();
-        String correo="";
-        String numEscenario="";
+        String correo = "";
+        String numEscenario = "";
 
         // Interacción con el usuario
         System.out.print("Ingrese su nombre de usuario: ");
@@ -59,11 +59,15 @@ public class Controlador {
 
     /**
      * Carga los usuarios desde el archivo binario.
-     * @return Un mapa de usuarios con su respectivo correo.
+     * 
+     * @return un mapa de usuarios donde la clave es el nombre de usuario y el valor
+     *         es el correo electrónico.
      */
+    @SuppressWarnings("unchecked") // Suprimimos la advertencia
     private static Map<String, String> cargarUsuarios() {
         try (ObjectInputStream entrada = new ObjectInputStream(new FileInputStream(ARCHIVO_USUARIOS))) {
-            return (Map<String, String>) entrada.readObject();
+            return (Map<String, String>) entrada.readObject();// nos devuelve una advertencia de tipo unchecked, pero no
+                                                              // afecta al funcionamiento del programa
         } catch (IOException | ClassNotFoundException e) {
             return new HashMap<>();
         }
@@ -71,6 +75,7 @@ public class Controlador {
 
     /**
      * Guarda la lista de usuarios en el archivo binario.
+     * 
      * @param usuarios El mapa de usuarios a guardar.
      */
     private static void guardarUsuarios(Map<String, String> usuarios) {
@@ -83,10 +88,10 @@ public class Controlador {
 
     /**
      * Muestra todos los archivos de escenarios disponibles en la carpeta escenarios
-     */   
+     */
     private static void mostrarEscenariosDisponibles() {
         File carpetaEscenarios = new File(CARPETA_ESCENARIOS);
-        String numEscenario="";
+        String numEscenario = "";
         File[] archivosEscenarios = carpetaEscenarios.listFiles((dir, name) -> name.endsWith(".txt"));
 
         if (archivosEscenarios != null && archivosEscenarios.length > 0) {
@@ -103,11 +108,12 @@ public class Controlador {
 
     /**
      * Muestra el escenario solicitado por el usuario.
+     * 
      * @param numEscenario El número del escenario a mostrar.
      */
     private static void mostrarEscenario(String numEscenario) {
         String rutaEscenario = CARPETA_ESCENARIOS + "escenario_" + numEscenario + ".txt";
-        
+
         try (BufferedReader br = new BufferedReader(new FileReader(rutaEscenario))) {
             br.lines().forEach(System.out::println);
         } catch (IOException e) {
