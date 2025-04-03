@@ -21,7 +21,7 @@ import java.util.Scanner;
  *              el jugador.
  */
 public class Controlador {
-    private static final String ARCHIVO_USUARIOS = "usuarios.dat";
+    private static final String ARCHIVO_USUARIOS = "usuarios.bin";
     private static final String CARPETA_ESCENARIOS = "escenarios/"; // Ruta donde están los escenarios
 
     /**
