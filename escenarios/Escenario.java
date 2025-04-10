@@ -118,34 +118,33 @@ public class Escenario {
         int nuevaY = posY;
     
         switch (Character.toUpperCase(direccion)) {
-            case 'W': nuevaY--; break;
-            case 'A': nuevaX--; break;
-            case 'S': nuevaY++; break;
-            case 'D': nuevaX++; break;
+            case 'W': nuevaY--; break; // Mover hacia arriba
+            case 'A': nuevaX--; break; // Mover hacia izquierda
+            case 'S': nuevaY++; break; // Mover hacia abajo
+            case 'D': nuevaX++; break; // Mover hacia derecha
             default:
                 System.out.println("Dirección inválida.");
                 return;
         }
     
-        // Verificar si las nuevas coordenadas están fuera de los límites del mapa,
-        // pero permitirlo si es la salida
-        if ((nuevaX < 1 || nuevaX >= COLUMNAS - 1 || nuevaY < 1 || nuevaY >= FILAS - 1) 
-            && mapa[nuevaY][nuevaX] != 'S') {
-            System.out.println("Movimiento fuera de los límites del mapa.");
-            return;
-        }
+        // Verificar si la nueva posición está dentro de los límites del mapa
+        if (nuevaX >= 0 && nuevaX < COLUMNAS && nuevaY >= 0 && nuevaY < FILAS) {
+            char destino = mapa[nuevaY][nuevaX];
     
-        char destino = mapa[nuevaY][nuevaX];
-    
-        if (destino == ' ' || destino == 'S') {
-            setPosicion(nuevaX, nuevaY);
-            if (destino == 'S') {
-                System.out.println("¡Has llegado a la salida! Felicidades!");
+            if (destino == ' ' || destino == 'S') { // Si es un espacio vacío o la salida
+                setPosicion(nuevaX, nuevaY); // Mover al jugador
+                if (destino == 'S') {
+                    System.out.println("¡Has llegado a la salida! 🎉");
+                }
+            } else {
+                System.out.println("No puedes moverte ahí. Hay una pared o un obstáculo.");
             }
         } else {
-            System.out.println("No puedes moverte ahí. Hay una pared o un obstáculo.");
+            System.out.println("Movimiento fuera de los límites del mapa.");
         }
     }
+    
+    
     
     
 
