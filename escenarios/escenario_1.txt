@@ -1,10 +1,10 @@
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-X              XXXXXX       X          X
-X  XX X  X  X       X  X  X  X  XX  X  X
-X  X     X  X  XX X  X  X  X  X  X  X  X
-X  X  X  X  X  X     X  X  X  X  X     X
-X  X  X     X  X  X  X  X  X  X  X  X  X
-X     X  X     X  X  X  X  X     X     X
-X  X     X  X  X  X  X  X     X  X  X  X
-X  X  X     X  X  X  X     X  X  X  X  X
-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+10E, 10O, 1E, 10O, 9E
+10E, 5O, 1E, 4O, 10E, 5O, 5E
+10E, 5O, 1E, 5O, 9E, 5O, 5E
+10E, 5O, 1E, 5O, 9E, 5O, 5E
+10E, 5O, 1E, 3O, 12E, 3O, 5E
+5E, 5O, 9E, 1E, 2O, 5E, 3O
+5E, 5O, 10E, 5O, 10E, 5O
+5E, 5O, 9E, 1E, 5O, 10E, 5O
+5E, 5O, 9E, 1E, 5O, 5E, 10O
+5E, 5O, 14E, 5O, 1E, 10E
