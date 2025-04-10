@@ -48,10 +48,24 @@ public class Controlador {
             System.out.println("Usuario registrado con éxito.");
         }
 
-        // Listar los escenarios disponibles y pedir uno válido
-        String[] nombresValidos = mostrarEscenariosDisponibles(teclado);
+        // Listar los escenarios disponibles y validar el escenario seleccionado
+        File carpetaEscenarios = new File(CARPETA_ESCENARIOS);
+        File[] archivosEscenarios = carpetaEscenarios.listFiles((dir, name) -> name.endsWith(".txt"));
 
-        // Pedir al usuario el número del escenario hasta que introduzca uno válido
+        if (archivosEscenarios == null || archivosEscenarios.length == 0) {
+            System.out.println("No hay escenarios disponibles. Por favor, crea uno antes de continuar.");
+            return;
+        }
+
+        System.out.println("Escenarios disponibles:");
+        String[] nombresValidos = new String[archivosEscenarios.length];
+        for (int i = 0; i < archivosEscenarios.length; i++) {
+            String nombre = archivosEscenarios[i].getName().replace("escenario_", "").replace(".txt", "");
+            nombresValidos[i] = nombre;
+            System.out.println((i + 1) + ". Escenario " + nombre);
+        }
+
+        // Solicita un escenario hasta que el usuario escriba uno válido
         while (true) {
             System.out.print("Ingrese el número de escenario que desea ver: ");
             numEscenario = teclado.nextLine().trim();
@@ -105,66 +119,40 @@ public class Controlador {
     }
 
     /**
-     * Muestra todos los archivos de escenarios disponibles en la carpeta escenarios
-     * y devuelve una lista de números válidos para su posterior validación.
-     * 
-     * @return array con los números de escenario disponibles
-     */
-    private static String[] mostrarEscenariosDisponibles(Scanner teclado) {
-        File carpetaEscenarios = new File(CARPETA_ESCENARIOS);
-        File[] archivosEscenarios = carpetaEscenarios.listFiles((dir, name) -> name.endsWith(".txt"));
-
-        if (archivosEscenarios == null || archivosEscenarios.length == 0) {
-            System.out.println("No hay escenarios disponibles.");
-            System.exit(0); // Cierra el programa si no hay escenarios
-        }
-
-        String[] nombresValidos = new String[archivosEscenarios.length];
-        System.out.println("Escenarios disponibles:");
-        for (int i = 0; i < archivosEscenarios.length; i++) {
-            // Extrae solo el número del archivo sin la extensión ".txt"
-            String numEscenario = archivosEscenarios[i].getName().replace("escenario_", "").replace(".txt", "");
-            nombresValidos[i] = numEscenario;
-            System.out.println((i + 1) + ". Escenario " + numEscenario);
-        }
-
-        return nombresValidos;
-    }
-
-    /**
      * Muestra el escenario solicitado por el usuario.
      * 
      * @param numEscenario El número del escenario a mostrar.
      */
-    private static void mostrarEscenario(String numEscenario) {
-        String rutaEscenario = CARPETA_ESCENARIOS + "escenario_" + numEscenario + ".txt";
-        Scanner teclado = new Scanner(System.in);
+private static void mostrarEscenario(String numEscenario) {
+    String rutaEscenario = CARPETA_ESCENARIOS + "escenario_" + numEscenario + ".txt";
+    Scanner teclado = new Scanner(System.in);
 
-        try {
-            Escenario escenario = new Escenario();
-            escenario.generarDesdeArchivo(rutaEscenario);
+    try {
+        Escenario escenario = new Escenario();
+        escenario.generarDesdeArchivo(rutaEscenario);
 
-            while (true) {
-                escenario.mostrarMapa();
-                System.out.print("Mover (W/A/S/D o Q para salir): ");
-                char direccion = teclado.nextLine().toUpperCase().charAt(0);
+        while (true) {
+            escenario.mostrarMapa();
+            System.out.print("Mover (W/A/S/D o Q para salir): ");
+            char direccion = teclado.nextLine().toUpperCase().charAt(0);
 
-                if (direccion == 'Q') {
-                    System.out.println("Saliendo del escenario...");
-                    break;
-                }
-
-                escenario.moverJugador(direccion);
-
-                if (escenario.esSalida(escenario.getPosX(), escenario.getPosY())) {
-                    escenario.mostrarMapa();
-                    System.out.println("¡Felicidades, has terminado el escenario!");
-                    break;
-                }
+            if (direccion == 'Q') {
+                System.out.println("Saliendo del escenario...");
+                break;
             }
 
-        } catch (IOException e) {
-            System.out.println("Error al cargar el escenario: " + e.getMessage());
+            escenario.moverJugador(direccion);
+
+            if (escenario.esSalida(escenario.getPosX(), escenario.getPosY())) {
+                escenario.mostrarMapa();
+                System.out.println("¡Felicidades, has terminado el escenario!");
+                break;
+            }
         }
+
+    } catch (IOException e) {
+        System.out.println("Error al cargar el escenario: " + e.getMessage());
     }
+}
+
 }
