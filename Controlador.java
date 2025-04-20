@@ -17,7 +17,7 @@ import escenarios.Escenario;
  * 
  * @author Jose Luis Moreno Torés y Sergio Ramírez Pla
  * @version GPL v_3
- * @date 01/04/2025
+ * @date 20/04/2025
  * @description Gestiona la carga de usuarios, escenarios y la interacción con
  *              el jugador.
  */

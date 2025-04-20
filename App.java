@@ -6,7 +6,7 @@ import GestionDirectorios.ArchivoDirectorios;
  * 
  * @author Jose Luis Moreno Torés y Sergio Ramírez Pla
  * @version GPL v_3
- * @date 01/04/2025
+ * @date 20/04/2025
  * @description Esta clase se encarga de crear el archivo de configuración y los directorios necesarios para la aplicación.
  */
 
