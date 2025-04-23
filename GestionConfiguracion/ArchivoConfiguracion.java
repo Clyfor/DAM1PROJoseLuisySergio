@@ -11,22 +11,20 @@ public class ArchivoConfiguracion {
 
     /**
      * Método que comprueba si el archivo de configuración existe
-     * @return devolverá true si existe y false en caso de que no exista
      */
     public static boolean configuracionExiste() {
-        File archivo = new File(nombreArchivo);
-        return archivo.exists();
+        return new File(nombreArchivo).exists();
     }
-/**
- * Método que crea el archivo de configuración
- * @throws IOException lanza una excepción si no se puede crear el archivo
- */
+
+    /**
+     * Método que crea el archivo de configuración
+     */
     public static void crearArchivoConfig() throws IOException {
-        File archivo2 = new File(nombreArchivo);
-        if (archivo2.createNewFile()) {
-            System.out.println("\nArchivo de configuracion creado");
+        File archivo = new File(nombreArchivo);
+        if (archivo.createNewFile()) {
+            System.out.println("Archivo de configuracion creado");
         } else {
-            System.out.println("\nNo se ha podido crear el archivo de configuracion");
+            System.out.println("No se ha podido crear el archivo de configuracion");
         }
     }
 }
