@@ -45,10 +45,10 @@ public class ControladorVisual extends Application {
         VBox contenedor = new VBox(20);
         contenedor.setAlignment(Pos.CENTER);
 
-        String rutaFondo = "file:/C:/Users/Maria/Desktop/TRABAJO3EVA_ABRIR_SIEMPRE_ESTE/TrabajoConJavaFX/DAM1PROJoseLuisySergio/escenarios/fondo.jpg";
+        String rutaFondo = "escenarios/fondo.jpg";
 
         try {
-            Image fondo = new Image(rutaFondo);
+            Image fondo = new Image("file:" + rutaFondo);
             if (fondo == null) {
                 System.out.println("No se pudo cargar la imagen de fondo.");
             }
@@ -61,7 +61,7 @@ public class ControladorVisual extends Application {
             );
             contenedor.setBackground(new Background(backgroundImage));
         } catch (Exception e) {
-            System.out.println("Error al cargar el fondo desde la ruta absoluta.");
+            System.out.println("Error al cargar el fondo desde la ruta relativa.");
             e.printStackTrace();
         }
 
@@ -80,10 +80,10 @@ public class ControladorVisual extends Application {
         VBox contenedor = new VBox(20);
         contenedor.setAlignment(Pos.CENTER);
 
-        String rutaFondoSeleccion = "file:/C:/Users/Maria/Desktop/TRABAJO3EVA_ABRIR_SIEMPRE_ESTE/TrabajoConJavaFX/DAM1PROJoseLuisySergio/escenarios/seleccion.jpg";
+        String rutaFondoSeleccion = "escenarios/seleccion.jpg";
 
         try {
-            Image fondoSeleccion = new Image(rutaFondoSeleccion);
+            Image fondoSeleccion = new Image("file:" + rutaFondoSeleccion);
             if (fondoSeleccion == null) {
                 System.out.println("No se pudo cargar la imagen de fondo de selección.");
             }
@@ -101,13 +101,13 @@ public class ControladorVisual extends Application {
         }
 
         Button escenario1 = new Button("Escenario 1");
-        escenario1.setOnAction(e -> iniciarEscenario("escenario_1.txt"));
+        escenario1.setOnAction(e -> iniciarEscenario("escenarios/escenario_1.txt"));
 
         Button escenario2 = new Button("Escenario 2");
-        escenario2.setOnAction(e -> iniciarEscenario("escenario_2.txt"));
+        escenario2.setOnAction(e -> iniciarEscenario("escenarios/escenario_2.txt"));
 
         Button escenario3 = new Button("Escenario 3");
-        escenario3.setOnAction(e -> iniciarEscenario("escenario_3.txt"));
+        escenario3.setOnAction(e -> iniciarEscenario("escenarios/escenario_3.txt"));
 
         Button botonEstadisticas = new Button("Ver estadísticas");
         botonEstadisticas.setOnAction(e -> mostrarEstadisticas());
@@ -120,8 +120,8 @@ public class ControladorVisual extends Application {
 
     private void iniciarEscenario(String rutaEscenario) {
         try {
-            escenario.generarDesdeArchivo("escenarios/" + rutaEscenario);
-            String rutaTileset = "file:/C:/Users/Maria/Desktop/TRABAJO3EVA_ABRIR_SIEMPRE_ESTE/TrabajoConJavaFX/DAM1PROJoseLuisySergio/escenarios/casillero.png";
+            escenario.generarDesdeArchivo(rutaEscenario);
+            String rutaTileset = "file:escenarios/casillero.png";
             tileset = new Image(rutaTileset);
             grid = new GridPane();
             renderizarMapa();
@@ -137,16 +137,16 @@ public class ControladorVisual extends Application {
     private void renderizarMapa() {
         grid.getChildren().clear();
         char[][] mapa = escenario.getMapa();
-    
+
         for (int y = 0; y < mapa.length; y++) {
             for (int x = 0; x < mapa[y].length; x++) {
                 StackPane celda = new StackPane();
-    
+
                 // Crear ImageView para las celdas (casillas)
                 ImageView imageViewCasilla = new ImageView(tileset);
                 imageViewCasilla.setFitWidth(TILE_SIZE);
                 imageViewCasilla.setFitHeight(TILE_SIZE);
-    
+
                 // Dependiendo de la celda, se asigna una porción del tileset a la casilla
                 char simbolo = mapa[y][x];
                 switch (simbolo) {
@@ -175,12 +175,12 @@ public class ControladorVisual extends Application {
                         imageViewCasilla.setViewport(new javafx.geometry.Rectangle2D(0, 0, TILE_SIZE, TILE_SIZE)); // Valor por defecto
                     }
                 }
-    
+
                 // Crear ImageView para el personaje
                 ImageView imageViewPersonaje = new ImageView(tileset);
                 imageViewPersonaje.setFitWidth(TILE_SIZE);
                 imageViewPersonaje.setFitHeight(TILE_SIZE);
-    
+
                 // Si la posición actual coincide con la del jugador, mostrar al personaje
                 if (escenario.getPosX() == x && escenario.getPosY() == y) {
                     // Asume que el sprite del personaje está en (96, 64) en el tileset
@@ -189,19 +189,16 @@ public class ControladorVisual extends Application {
                     // Si no es el personaje, hacer transparente el ImageView del personaje
                     imageViewPersonaje.setOpacity(0);
                 }
-    
+
                 // Añadir las celdas y el personaje a la celda (el personaje está sobrepuesto)
                 celda.getChildren().add(imageViewCasilla);   // Celdas en el fondo
                 celda.getChildren().add(imageViewPersonaje); // Personaje encima de las celdas
-    
+
                 // Añadir la celda al grid
                 grid.add(celda, x, y);
             }
         }
     }
-    
-    
-    
 
     private void moverJugador(KeyEvent event) {
         boolean haChocado = false;
