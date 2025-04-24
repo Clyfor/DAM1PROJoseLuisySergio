@@ -4,7 +4,8 @@ import javafx.application.Application;
 
 /**
  * Clase principal de la aplicación.
- * Esta clase se encarga de crear el archivo de configuración y los directorios necesarios para la aplicación.
+ * Esta clase se encarga de crear el archivo de configuración y los directorios
+ * necesarios para la aplicación.
  */
 public class App {
     public static void main(String[] args) {
