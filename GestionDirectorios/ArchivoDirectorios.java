@@ -6,7 +6,7 @@ import java.io.File;
  * Clase que se encarga de la creación de los directorios
  */
 public class ArchivoDirectorios {
-    private static final String[] Directorios = {"jugadores", "escenarios", "partidas"};
+    private static final String[] Directorios = { "jugadores", "escenarios", "partidas" };
 
     /**
      * Método que crea los directorios si no existen

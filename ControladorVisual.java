@@ -1,4 +1,6 @@
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -34,9 +36,9 @@ import java.util.Map;
 public class ControladorVisual extends Application {
 
     private static final int TILE_SIZE = 32;
-    private GridPane grid = new GridPane();
+    private GridPane cuadricula = new GridPane();
     private Escenario escenario = new Escenario();
-    private Image tileset;
+    private Image casillero;
     private int altura = 1000;
     private int anchura = 600;
     private Stage stage;
@@ -61,7 +63,7 @@ public class ControladorVisual extends Application {
      */
     private void pedirNombreUsuario() {
         Map<String, String> usuarios = cargarUsuarios();
-        solicitarTexto("Nombre de usuario", "Bienvenido al juego de la mazmorra", "Por favor, introduce tu nombre:")
+        solicitarTexto("Nombre de usuario", "Bienvenido a DRAGONES y CATACUMBIAS", "Por favor, introduce tu nombre:")
                 .ifPresent(nombre -> {
                     nombreUsuario = nombre;
                     if (!usuarios.containsKey(nombreUsuario)) {
@@ -76,7 +78,7 @@ public class ControladorVisual extends Application {
      * Pide el correo electrónico del usuario.
      */
     private void pedirCorreoUsuario() {
-        solicitarTexto("Correo electrónico", "Bienvenido al juego de la mazmorra",
+        solicitarTexto("Correo electrónico", "Bienvenido a DRAGONES y CATACUMBIAS",
                 "Por favor, introduce tu correo electrónico:")
                 .ifPresent(correo -> {
                     correoUsuario = correo;
@@ -93,26 +95,26 @@ public class ControladorVisual extends Application {
         VBox contenedor = crearContenedorConFondo("escenarios/fondo.jpg");
         contenedor.getChildren().addAll(
                 crearLabel("Selecciona tu personaje:", 18),
-                crearBotonPersonaje("Clérigo", "clerigo"),
-                crearBotonPersonaje("Mago", "mago"),
-                crearBotonPersonaje("Guerrero", "guerrero"));
+                crearBotonPersonaje("El Sergio", "clerigo"),
+                crearBotonPersonaje("Conjurín el Que Siempre Falla", "mago"),
+                crearBotonPersonaje("Max10ºMeridio", "guerrero"));
         mostrarEscena(contenedor, "Selecciona tu personaje");
     }
 
     /**
      * Carga los usuarios desde un archivo de texto.
-     * 
+     *
      * @return un mapa de usuarios donde la clave es el nombre de usuario y el valor
      *         es el correo electrónico.
      */
     private Map<String, String> cargarUsuarios() {
         Map<String, String> usuarios = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(ARCHIVO_USUARIOS))) {
+        try (BufferedReader lectorArchivo = new BufferedReader(new FileReader(ARCHIVO_USUARIOS))) {
             String linea;
-            while ((linea = reader.readLine()) != null) {
-                String[] partes = linea.split(",");
-                if (partes.length == 2) {
-                    usuarios.put(partes[0].trim(), partes[1].trim());
+            while ((linea = lectorArchivo.readLine()) != null) {
+                String[] partesArchivo = linea.split(",");
+                if (partesArchivo.length == 2) {
+                    usuarios.put(partesArchivo[0].trim(), partesArchivo[1].trim());
                 }
             }
         } catch (IOException e) {
@@ -123,14 +125,14 @@ public class ControladorVisual extends Application {
 
     /**
      * Guarda un nuevo usuario en el archivo de texto.
-     * 
+     *
      * @param nombre nombre de usuario
      * @param correo correo electrónico del usuario
      */
     private void guardarUsuario(String nombre, String correo) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(ARCHIVO_USUARIOS, true))) {
-            writer.write(nombre + "," + correo);
-            writer.newLine();
+        try (BufferedWriter escritorArchivo = new BufferedWriter(new FileWriter(ARCHIVO_USUARIOS, true))) {
+            escritorArchivo.write(nombre + "," + correo);
+            escritorArchivo.newLine();
         } catch (IOException e) {
             System.out.println("Error al guardar usuario: " + e.getMessage());
         }
@@ -143,9 +145,9 @@ public class ControladorVisual extends Application {
     private void mostrarPantallaInicio() {
         VBox contenedor = crearContenedorConFondo("escenarios/fondo.jpg");
         contenedor.getChildren().addAll(
-                crearBotonAccion("Iniciar juego", this::seleccionarEscenario),
-                crearBotonAccion("Ver estadísticas", this::mostrarEstadisticas),
-                crearBotonAccion("Salir", () -> System.exit(0)));
+                crearBotonAccion("Iniciar el GOTY", this::handleIniciarEscenario),
+                crearBotonAccion("Ver estadísticas", this::handleMostrarEstadisticas),
+                crearBotonAccion("Salir", this::handleSalir));
         mostrarEscena(contenedor, "Mazmorra");
     }
 
@@ -155,41 +157,38 @@ public class ControladorVisual extends Application {
      */
     private void seleccionarEscenario() {
         VBox contenedor = crearContenedorConFondo("escenarios/seleccion.jpg");
-
-        // Creamos la etiqueta con estilo personalizado
+        // Le damos estilo a la etiqueta siendo de 18 píxeles, negrita y color naranja
+        // y la alineamos al centro de la pantalla
         Label etiquetaSeleccion = new Label("Selecciona un escenario");
-        etiquetaSeleccion.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FF5733;"); // Cambia
-                                                                                                           // #FF5733 al
-                                                                                                           // color que
-                                                                                                           // prefieras
+        etiquetaSeleccion.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #FF5733;");
 
         contenedor.getChildren().addAll(
                 etiquetaSeleccion,
-                crearBotonAccion("Escenario 1", () -> iniciarEscenario("escenarios/escenario_1.txt")),
-                crearBotonAccion("Escenario 2", () -> iniciarEscenario("escenarios/escenario_2.txt")),
-                crearBotonAccion("Escenario 3", () -> iniciarEscenario("escenarios/escenario_3.txt")),
-                crearBotonAccion("Volver", this::mostrarPantallaInicio));
+                crearBotonAccion("Escenario 1 (Modo fácil)", e -> iniciarEscenario("escenarios/escenario_1.txt")),
+                crearBotonAccion("Escenario 2 (Modo medio)", e -> iniciarEscenario("escenarios/escenario_2.txt")),
+                crearBotonAccion("Escenario 3 (Modo difícil)", e -> iniciarEscenario("escenarios/escenario_3.txt")),
+                crearBotonAccion("Volver al inicio", this::handleMostrarPantallaInicio));
 
         mostrarEscena(contenedor, "Selecciona un escenario");
     }
 
     /**
      * Inicia el escenario seleccionado por el jugador.
-     * 
+     *
      * @param rutaEscenario ruta del archivo del escenario a cargar tras haber sido
      *                      seleccionado por el jugador.
      */
     private void iniciarEscenario(String rutaEscenario) {
         try {
             escenario.generarDesdeArchivo(rutaEscenario);
-            tileset = new Image("file:escenarios/casillero.png");
-            grid = new GridPane();
+            casillero = new Image("file:escenarios/casillero.png");
+            cuadricula = new GridPane();
             vidas = 3;
             renderizarMapa();
-            Scene scene = new Scene(grid);
-            stage.setScene(scene);
+            Scene escena = new Scene(cuadricula);
+            stage.setScene(escena);
             stage.show();
-            scene.setOnKeyPressed(this::moverJugador);
+            escena.setOnKeyPressed(this::moverJugador);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -199,7 +198,7 @@ public class ControladorVisual extends Application {
      * Renderiza el mapa del escenario en la cuadrícula de la interfaz gráfica.
      */
     private void renderizarMapa() {
-        grid.getChildren().clear();
+        cuadricula.getChildren().clear();
         char[][] mapa = escenario.getMapa();
 
         for (int y = 0; y < mapa.length; y++) {
@@ -208,14 +207,14 @@ public class ControladorVisual extends Application {
                 ImageView imageViewCasilla = crearImagenCasilla(mapa[y][x]);
                 ImageView imageViewPersonaje = crearImagenPersonaje(x, y);
                 celda.getChildren().addAll(imageViewCasilla, imageViewPersonaje);
-                grid.add(celda, x, y);
+                cuadricula.add(celda, x, y);
             }
         }
     }
 
     /**
      * Mueve al jugador en la dirección indicada por la tecla presionada.
-     * 
+     *
      * @param event el evento de teclado que indica la dirección del movimiento.
      */
     private void moverJugador(KeyEvent event) {
@@ -254,14 +253,15 @@ public class ControladorVisual extends Application {
      * obstáculo.
      */
     private void mostrarMensajeColision() {
-        mostrarAlerta(Alert.AlertType.WARNING, "¡Cuidado!", null, "¡Ouch! Has perdido una vida." + "❤".repeat(vidas));
+        mostrarAlerta(Alert.AlertType.WARNING, "¡Ojete cuidado!", null,
+                "¡Ouch! Has perdido una vida." + "❤".repeat(vidas));
     }
 
     /**
      * Muestra un mensaje de advertencia al jugador cuando muere.
      */
     private void mostrarMensajeMuerto() {
-        mostrarAlerta(Alert.AlertType.INFORMATION, "¡Oh no!", null, "☠ ¡Has muerto! Vuelve a intentarlo.");
+        mostrarAlerta(Alert.AlertType.INFORMATION, "¡Oh no!", null, "☠ ¡Has muerto! ¡¡PAL LOBBY!! ☠\n");
     }
 
     /**
@@ -269,21 +269,20 @@ public class ControladorVisual extends Application {
      */
     private void mostrarFelicidades() {
         mostrarAlerta(Alert.AlertType.INFORMATION, "¡Felicidades!", "🎉 ¡Has llegado a la salida! 🎉",
-                "✨ ¡Bien hecho, ahora puedes elegir otro escenario! ✨")
+                "✨ ¡Bien hecho, ahora puedes elegir otro escenario y no anular la matrícula de programación! ✨")
                 .ifPresent(response -> seleccionarEscenario());
     }
 
     /**
-     * 
      * Muestra las estadísticas del jugador en una ventana emergente.
      * Incluye el número de pantallas completadas y el número de veces que ha
      * muerto.
      * También muestra la imagen del personaje seleccionado.
      */
     private void mostrarEstadisticas() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Estadísticas del jugador");
-        alert.setHeaderText("Datos de: " + nombreUsuario);
+        Alert alertaEstadisticas = new Alert(Alert.AlertType.INFORMATION);
+        alertaEstadisticas.setTitle("Estadísticas del jugador");
+        alertaEstadisticas.setHeaderText("Datos de: " + nombreUsuario);
 
         VBox contenido = new VBox(10);
         contenido.setAlignment(Pos.CENTER);
@@ -293,14 +292,21 @@ public class ControladorVisual extends Application {
                 "👻 Has muerto: " + vecesMuerto + " veces!");
 
         contenido.getChildren().addAll(imageViewPersonaje, estadisticasLabel);
-        alert.getDialogPane().setContent(contenido);
+        alertaEstadisticas.getDialogPane().setContent(contenido);
 
-        alert.showAndWait();
+        alertaEstadisticas.showAndWait();
+    }
+
+    /**
+     * Cierra la aplicación.
+     */
+    private void salir() {
+        System.exit(0);
     }
 
     /**
      * Crea un contenedor con fondo a partir de una ruta de imagen.
-     * 
+     *
      * @param rutaFondo ruta de la imagen de fondo
      * @return el contenedor con el fondo aplicado
      */
@@ -325,7 +331,7 @@ public class ControladorVisual extends Application {
 
     /**
      * Crea un Label con un texto y un tamaño de fuente específicos.
-     * 
+     *
      * @param texto        el texto a mostrar en el Label
      * @param tamañoFuente el tamaño de fuente del texto
      * @return devuelve el Label creado
@@ -338,7 +344,7 @@ public class ControladorVisual extends Application {
 
     /**
      * Crea un botón para seleccionar un personaje.
-     * 
+     *
      * @param texto     el texto que se mostrará en el botón
      * @param personaje el nombre del personaje asociado al botón
      * @return el botón creado
@@ -354,25 +360,25 @@ public class ControladorVisual extends Application {
 
     /**
      * Crea un botón con un texto y una acción asociada.
-     * 
+     *
      * @param texto  el texto que se mostrará en el botón
      * @param accion la acción que se ejecutará al hacer clic en el botón
      * @return el botón creado
      */
-    private Button crearBotonAccion(String texto, Runnable accion) {
+    private Button crearBotonAccion(String texto, EventHandler<ActionEvent> accion) {
         Button boton = new Button(texto);
-        boton.setOnAction(e -> accion.run());
+        boton.setOnAction(accion);
         return boton;
     }
 
     /**
      * Crea una imagen de casilla a partir de un símbolo.
-     * 
+     *
      * @param simbolo el símbolo que representa la casilla en el juego
      * @return la imagen de la casilla creada
      */
     private ImageView crearImagenCasilla(char simbolo) {
-        ImageView imageViewCasilla = new ImageView(tileset);
+        ImageView imageViewCasilla = new ImageView(casillero);
         imageViewCasilla.setFitWidth(TILE_SIZE);
         imageViewCasilla.setFitHeight(TILE_SIZE);
         switch (simbolo) {
@@ -388,13 +394,13 @@ public class ControladorVisual extends Application {
 
     /**
      * Crea una imagen del personaje en la posición especificada.
-     * 
+     *
      * @param x posicion x del personaje
      * @param y posicion y del personaje
      * @return la imagen del personaje creada
      */
     private ImageView crearImagenPersonaje(int x, int y) {
-        ImageView imageViewPersonaje = new ImageView(tileset);
+        ImageView imageViewPersonaje = new ImageView(casillero);
         imageViewPersonaje.setFitWidth(TILE_SIZE);
         imageViewPersonaje.setFitHeight(TILE_SIZE);
         if (escenario.getPosX() == x && escenario.getPosY() == y) {
@@ -404,18 +410,18 @@ public class ControladorVisual extends Application {
                 case "guerrero" -> imageViewPersonaje.setViewport(new Rectangle2D(96, 64, TILE_SIZE, TILE_SIZE));
             }
         } else {
-            imageViewPersonaje.setOpacity(0);
+            imageViewPersonaje.setOpacity(0);// Oculta el personaje en otras posiciones
         }
         return imageViewPersonaje;
     }
 
     /**
      * Crea una imagen del personaje para mostrar en las estadísticas.
-     * 
+     *
      * @return la imagen del personaje creada
      */
     private ImageView crearImagenPersonajeEstadisticas() {
-        ImageView imageViewPersonaje = new ImageView(tileset);
+        ImageView imageViewPersonaje = new ImageView(casillero);
         imageViewPersonaje.setFitWidth(TILE_SIZE * 2);
         imageViewPersonaje.setFitHeight(TILE_SIZE * 2);
         switch (personajeSeleccionado) {
@@ -428,7 +434,7 @@ public class ControladorVisual extends Application {
 
     /**
      * Muestra una escena con un contenedor y un título.
-     * 
+     *
      * @param contenedor el contenedor que contiene los elementos de la escena
      * @param titulo     el título de la ventana
      */
@@ -441,23 +447,23 @@ public class ControladorVisual extends Application {
 
     /**
      * Solicita un texto al usuario mediante un cuadro de diálogo.
-     * 
+     *
      * @param titulo     el título del cuadro de diálogo
      * @param encabezado el encabezado del cuadro de diálogo
      * @param contenido  el contenido del cuadro de diálogo
      * @return
      */
     private Optional<String> solicitarTexto(String titulo, String encabezado, String contenido) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(titulo);
-        dialog.setHeaderText(encabezado);
-        dialog.setContentText(contenido);
-        return dialog.showAndWait();
+        TextInputDialog dialogo = new TextInputDialog();
+        dialogo.setTitle(titulo);
+        dialogo.setHeaderText(encabezado);
+        dialogo.setContentText(contenido);
+        return dialogo.showAndWait();
     }
 
     /**
      * Muestra una alerta al usuario con un tipo, título, encabezado y contenido
-     * 
+     *
      * @param tipo       tipo de alerta
      * @param titulo     título de la alerta
      * @param encabezado encabezado de la alerta
@@ -466,16 +472,52 @@ public class ControladorVisual extends Application {
      */
     private Optional<ButtonType> mostrarAlerta(Alert.AlertType tipo, String titulo, String encabezado,
             String contenido) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(encabezado);
-        alert.setContentText(contenido);
-        return alert.showAndWait();
+        Alert alerta = new Alert(tipo);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(encabezado);
+        alerta.setContentText(contenido);
+        return alerta.showAndWait();
+    }
+
+    /**
+     * Maneja la acción de iniciar el escenario.
+     *
+     * @param event el evento de acción
+     */
+    private void handleIniciarEscenario(ActionEvent event) {
+        seleccionarEscenario();
+    }
+
+    /**
+     * Maneja la acción de mostrar las estadísticas.
+     *
+     * @param event el evento de acción
+     */
+    private void handleMostrarEstadisticas(ActionEvent event) {
+        mostrarEstadisticas();
+    }
+
+    /**
+     * Controla la acción de salir de la aplicación.
+     *
+     * @param event el evento de acción
+     */
+    private void handleSalir(ActionEvent event) {
+        salir();
+    }
+
+    /**
+     * Maneja la acción de mostrar la pantalla de inicio.
+     * 
+     * @param event el evento de acción
+     */
+    private void handleMostrarPantallaInicio(ActionEvent event) {
+        mostrarPantallaInicio();
     }
 
     /**
      * Método principal que inicia la aplicación.
-     * 
+     *
      * @param args argumentos de la línea de comandos
      */
     public static void main(String[] args) {
