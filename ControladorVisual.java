@@ -22,7 +22,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 import escenarios.Escenario;
 import java.util.Optional;
 
@@ -32,8 +31,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public class ControladorVisual extends Application {
 
@@ -313,8 +312,29 @@ public class ControladorVisual extends Application {
         VBox contenido = new VBox(10);
         contenido.setAlignment(Pos.CENTER);
 
+        // Obtener el top 10 de jugadores
         List<ControladorBaseDeDatos.EstadisticasJugador> top10 = controladorBaseDeDatos.obtenerTop10();
-        for (ControladorBaseDeDatos.EstadisticasJugador estadisticas : top10) {
+
+        // Crear una sección para el Hall of Fame (top 3)
+        Label hallOfFameLabel = new Label("Hall of Fame");
+        hallOfFameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        contenido.getChildren().add(hallOfFameLabel);
+
+        for (int i = 0; i < Math.min(3, top10.size()); i++) {
+            ControladorBaseDeDatos.EstadisticasJugador estadisticas = top10.get(i);
+            Label estadisticasLabel = new Label(estadisticas.getNombre() + ": " + estadisticas.getPuntuacion() + " puntos");
+            contenido.getChildren().add(estadisticasLabel);
+        }
+
+        // Crear una sección para el resto del top 10
+        Label restoTop10Label = new Label("Resto del Top 10");
+        restoTop10Label.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+
+        contenido.getChildren().add(restoTop10Label);
+
+        for (int i = 3; i < top10.size(); i++) {
+            ControladorBaseDeDatos.EstadisticasJugador estadisticas = top10.get(i);
             Label estadisticasLabel = new Label(estadisticas.getNombre() + ": " + estadisticas.getPuntuacion() + " puntos");
             contenido.getChildren().add(estadisticasLabel);
         }

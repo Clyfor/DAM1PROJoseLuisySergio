@@ -1,17 +1,23 @@
-Comando para compilar:
+Antiguo Comando para compilar:
 
 
-javac -g -d compilados --module-path C:/Users/Maria/Downloads/openjfx-24_windows-x64_bin-sdk/javafx-sdk-24/lib --add-modules javafx.fxml,javafx.controls escenarios/*.java GestionConfiguracion/*.java GestionDirectorios/*.java *.java
-
+javac -g -d compilados -cp archivosdebasededatos/sqlite-jdbc-3.49.1.0.jar --module-path C:/Users/Maria/Downloads/openjfx-24_windows-x64_bin-sdk/javafx-sdk-24/lib --add-modules javafx.fxml,javafx.controls escenarios/*.java GestionConfiguracion/*.java GestionDirectorios/*.java *.java 
 
 javac -g -d compilados --module-path C:\Users\Sergio\Downloads\openjfx-24.0.1_windows-x64_bin-sdk\javafx-sdk-24.0.1\lib --add-modules javafx.fxml,javafx.controls escenarios/*.java GestionConfiguracion/*.java GestionDirectorios/*.java *.java
 
-
-
-comando para ejecutar:
+Comando para ejecutar:
 
 java -classpath compilados --module-path C:/Users/Maria/Downloads/openjfx-24_windows-x64_bin-sdk/javafx-sdk-24/lib --add-modules javafx.fxml,javafx.controls App
 
 
 java -classpath compilados --module-path C:\Users\Sergio\Downloads\openjfx-24.0.1_windows-x64_bin-sdk\javafx-sdk-24.0.1\lib --add-modules javafx.fxml,javafx.controls App
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+COMANDO PARA COMPILAR CON BD Y JAVAFX:
+
+javac -g -d compilados -cp archivosdebasededatos/sqlite-jdbc-3.49.1.0.jar --module-path C:/Users/Maria/Downloads/openjfx-24_windows-x64_bin-sdk/javafx-sdk-24/lib --add-modules javafx.fxml,javafx.controls escenarios/*.java GestionConfiguracion/*.java GestionDirectorios/*.java *.java 
+
+COMANDO PARA EJECUTAR CON BD Y JAVAFX (CAMBIAR EL MODULE PATH AL DEL NUEVO PC):
+
+java -cp "compilados;archivosdebasededatos/sqlite-jdbc-3.49.1.0.jar" --module-path C:/Users/Maria/Downloads/openjfx-24_windows-x64_bin-sdk/javafx-sdk-24/lib --add-modules javafx.fxml,javafx.controls App 
