@@ -33,7 +33,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Esta es la clase principal que maneja la interfaz gráfica del
+ * juego "Dragones y Catacumbias".
+ * Permitirá al jugador interactuar con el juego, seleccionar personajes, escenarios
+ * y ver estadísticas.
+ */
 public class ControladorVisual extends Application {
 
     private static final int TILE_SIZE = 32;

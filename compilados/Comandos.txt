@@ -1,0 +1,21 @@
+COMPILAR
+javac --module-path "C:\Users\jlmto\OneDrive\Desktop\Programacion\javaFX\javafx-sdk-24\lib" --add-modules javafx.controls,javafx.fxml MiClase.java
+
+
+Ejecutar
+java --module-path "C:\Users\jlmto\OneDrive\Desktop\Programacion\javaFX\javafx-sdk-24\lib" --add-modules javafx.controls,javafx.fxml MiClase
+
+SI HAY PAQUETES 
+COMPILAR
+javac --module-path "C:\Users\jlmto\OneDrive\Desktop\Programacion\javaFX\javafx-sdk-24\lib" --add-modules javafx.controls,javafx.fxml interfaz\MiClase.java
+
+EJECUTAR
+java --module-path "C:\Users\jlmto\OneDrive\Desktop\Programacion\javaFX\javafx-sdk-24\lib" --add-modules javafx.controls,javafx.fxml interfaz.MiClase
+
+
+PARA SALIR A EXPONER
+COMPILAR
+javac -g -d compilados *.java
+
+Ejecutar
+java -cp compilados App
